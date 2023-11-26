@@ -58,7 +58,7 @@ const userSchema = new Schema<TUser>({
   address: userAddressSchema,
   isActive: {
     type: Boolean,
-    // required: [true, "isactive is require"],
+    required: [true, "isactive is require"],
     default: true,
   },
   orders: { type: [userOrdersSchema] },

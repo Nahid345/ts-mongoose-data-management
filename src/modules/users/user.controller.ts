@@ -15,11 +15,34 @@ const createUser = async (req: Request, res: Response) => {
       message: "User create succesfully",
       data: result,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "something wrong",
+      error: err,
+    });
+  }
+};
+
+// getalluser
+
+const getAllusers = async (req: Request, res: Response) => {
+  try {
+    const result = await userServices.getAllUsers();
+    res.status(200).json({
+      success: true,
+      message: "Users fetched successfully!",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something wrong",
+    });
   }
 };
 
 export const userController = {
   createUser,
+  getAllusers,
 };
