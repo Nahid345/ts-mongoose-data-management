@@ -29,3 +29,24 @@ export type TUser = {
   address: TAddress;
   orders?: TOrder[];
 };
+
+// update user type
+
+export type TUpdateUser = {
+  userId: number;
+  userName: string;
+  password: string;
+  fullName: TFullName;
+  age: number;
+  email: string;
+  isActive: boolean;
+  hobbies: string[];
+  address: TAddress;
+  orders?: TOrder[];
+};
+
+// creating static
+
+export interface UserModel extends Model<TUser> {
+  isUserExists(id: string): Promise<TUser | null>;
+}

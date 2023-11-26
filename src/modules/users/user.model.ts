@@ -1,6 +1,12 @@
 import { Schema, model, connect } from "mongoose";
 import bcrypt from "bcrypt";
-import { TAddress, TFullName, TOrder, TUser } from "./user.interface";
+import {
+  TAddress,
+  TFullName,
+  TOrder,
+  TUser,
+  UserModel,
+} from "./user.interface";
 import config from "../../app/config";
 
 const userFullNameSchema = new Schema<TFullName>(
@@ -40,7 +46,7 @@ const userOrdersSchema = new Schema(
   { _id: false }
 );
 
-const userSchema = new Schema<TUser>({
+const userSchema = new Schema<TUser, UserModel>({
   userId: {
     type: Number,
     required: true,
@@ -94,6 +100,13 @@ userSchema.post("save", function (document, next) {
   next();
 });
 
+// creating static method
+
+userSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await User.findOne({ id });
+  return existingUser;
+};
+
 // create model
 
-export const userModel = model<TUser>("User-collection", userSchema);
+export const User = model<TUser, UserModel>("User-collection", userSchema);

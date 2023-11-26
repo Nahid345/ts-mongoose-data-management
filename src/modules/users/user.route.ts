@@ -3,6 +3,7 @@ import { userController } from "./user.controller";
 
 const router = express.Router();
 
+router.put("/:userId", userController.updateUser);
 router.post("/", userController.createUser);
 router.get("/", userController.getAllusers);
 router.get("/:userId", userController.getSingUser);

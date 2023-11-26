@@ -1,15 +1,15 @@
-import { TUser } from "./user.interface";
-import { userModel } from "./user.model";
+import { TUpdateUser, TUser } from "./user.interface";
+import { User } from "./user.model";
 
 // create user
 const createUserIntoDB = async (user: TUser) => {
-  const result = await userModel.create(user);
+  const result = await User.create(user);
   return result;
 };
 
 // get all user
 const getAllUsers = async () => {
-  const result = await userModel.aggregate([
+  const result = await User.aggregate([
     {
       $project: {
         _id: 0,
@@ -27,7 +27,7 @@ const getAllUsers = async () => {
 //getsingleuser
 
 const getSingleUser = async (id: string) => {
-  const res = await userModel.findOne(
+  const res = await User.findOne(
     { userId: id },
     {
       _id: 0,
@@ -41,8 +41,16 @@ const getSingleUser = async (id: string) => {
   return res;
 };
 
+//update user
+
+const updateUser = async (userId: string | number, updateData: TUpdateUser) => {
+  const result = await User.updateOne({ userId }, updateData);
+  return result;
+};
+
 export const userServices = {
   createUserIntoDB,
   getAllUsers,
   getSingleUser,
+  updateUser,
 };
