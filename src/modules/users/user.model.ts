@@ -3,33 +3,42 @@ import bcrypt from "bcrypt";
 import { TAddress, TFullName, TOrder, TUser } from "./user.interface";
 import config from "../../app/config";
 
-const userFullNameSchema = new Schema<TFullName>({
-  firstName: {
-    type: String,
-    required: [true, "firstName is require"],
-    maxlength: [20, "first name is more than 20 characters"],
-    validate: function (value: string) {
-      const nameCapitalize = value.charAt(0).toUpperCase() + value.slice(1);
-      return value === nameCapitalize;
+const userFullNameSchema = new Schema<TFullName>(
+  {
+    firstName: {
+      type: String,
+      required: [true, "firstName is require"],
+      maxlength: [20, "first name is more than 20 characters"],
+      validate: function (value: string) {
+        const nameCap = value.charAt(0).toUpperCase() + value.slice(1);
+        return value === nameCap;
+      },
+    },
+    lastName: {
+      type: String,
+      required: [true, "lastName is require"],
     },
   },
-  lastName: {
-    type: String,
-    required: [true, "lastName is require"],
+  { _id: false }
+);
+
+const userAddressSchema = new Schema(
+  {
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    country: { type: String, required: true },
   },
-});
+  { _id: false }
+);
 
-const userAddressSchema = new Schema({
-  street: { type: String, required: true },
-  city: { type: String, required: true },
-  country: { type: String, required: true },
-});
-
-const userOrdersSchema = new Schema({
-  productName: { type: String, required: true },
-  price: { type: Number, required: true },
-  quantity: { type: Number, required: true },
-});
+const userOrdersSchema = new Schema(
+  {
+    productName: { type: String, required: true },
+    price: { type: Number, required: true },
+    quantity: { type: Number, required: true },
+  },
+  { _id: false }
+);
 
 const userSchema = new Schema<TUser>({
   userId: {
@@ -66,9 +75,8 @@ const userSchema = new Schema<TUser>({
 
 // // creating middleware
 
-// // before sending data to db
+// before sending data to db
 userSchema.pre("save", async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const users = this;
 
   // Store hashing  password into DB.
@@ -80,7 +88,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// after saved data that works {password = ""}
+// after saved data
 userSchema.post("save", function (document, next) {
   document.password = "";
   next();
