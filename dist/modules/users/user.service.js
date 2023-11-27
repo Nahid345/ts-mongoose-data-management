@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userServices = void 0;
 const user_model_1 = require("./user.model");
 // create user
-const createUserIntoDB = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    if (yield user_model_1.User.isUserExists(user.userId)) {
-        throw new Error("User already exists");
+const createUserIntoDB = (userData) => __awaiter(void 0, void 0, void 0, function* () {
+    if (yield user_model_1.User.isUserExists(userData.userId)) {
+        throw new Error('User already exists');
     }
-    const result = yield user_model_1.User.create(user);
+    const result = yield user_model_1.User.create(userData);
     return result;
 });
 // get all user
@@ -36,16 +36,12 @@ const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 //getsingleuser
-const getSingleUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const res = yield user_model_1.User.findOne({ userId: id }, {
-        _id: 0,
-        userName: 1,
-        fullName: 1,
-        age: 1,
-        email: 1,
-        address: 1,
-    });
-    return res;
+const getSingleUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.User.isUserExists(userId);
+    if (!result) {
+        throw new Error('User not found!');
+    }
+    return result;
 });
 //update user
 const updateUser = (userId, updateData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -63,16 +59,38 @@ const updateOrders = (id, orderData) => __awaiter(void 0, void 0, void 0, functi
     return result;
 });
 // get order
-const getUserOrders = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.User.findOne({ userId: id });
-    return result === null || result === void 0 ? void 0 : result.orders;
+const getUserOrders = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExist = yield user_model_1.User.isUserExists(userId);
+    if (!isExist) {
+        throw new Error('User not found!');
+    }
+    const result = yield user_model_1.User.findOne({ userId }).select('orders');
+    return result;
 });
-// calcualtor
-const calculateOrders = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const user = yield user_model_1.User.findOne({ userId: id });
-    const totalOrderPrice = ((_a = user === null || user === void 0 ? void 0 : user.orders) === null || _a === void 0 ? void 0 : _a.reduce((total, orders) => total + orders.price * orders.quantity, 0)) || 0;
-    return totalOrderPrice;
+// calcualtor price
+const calculateOrders = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExist = yield user_model_1.User.isUserExists(userId);
+    if (!isExist) {
+        throw new Error('User not found!');
+    }
+    const result = yield user_model_1.User.aggregate([
+        { $match: { userId } },
+        { $unwind: '$orders' },
+        {
+            $group: {
+                _id: null,
+                totalPrice: {
+                    $sum: { $multiply: ['$orders.price', '$orders.quantity'] },
+                },
+            },
+        },
+        {
+            $project: { totalPrice: 1, _id: 0 },
+        },
+    ]);
+    const totalPrice = result[0] ? result[0].totalPrice : 0;
+    const fixedTotalPrice = Number(totalPrice.toFixed(2));
+    return fixedTotalPrice;
 });
 exports.userServices = {
     createUserIntoDB,

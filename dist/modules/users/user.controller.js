@@ -20,14 +20,14 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const result = yield user_service_1.userServices.createUserIntoDB(validateData);
         res.status(200).json({
             success: true,
-            message: "User create succesfully",
+            message: 'User create succesfully',
             data: result,
         });
     }
     catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message || "something wrong",
+            message: err.message || 'something wrong',
             error: err,
         });
     }
@@ -38,58 +38,58 @@ const getAllusers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const result = yield user_service_1.userServices.getAllUsers();
         res.status(200).json({
             success: true,
-            message: "Users fetched successfully!",
+            message: 'Users fetched successfully!',
             data: result,
         });
     }
     catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message || "Something wrong",
+            message: err.message || 'Something wrong',
         });
     }
 });
 //getSingleUser
 const getSingUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId } = req.params;
+        const userId = Number(req.params.userId);
         const result = yield user_service_1.userServices.getSingleUser(userId);
         if (result === null) {
             res.status(404).json({
                 success: false,
-                message: "User not found",
+                message: 'User not found',
                 error: {
                     code: 404,
-                    description: "User not found!",
+                    description: 'User not found!',
                 },
             });
         }
         res.status(200).json({
             success: true,
-            message: "Users fetched successfully!",
+            message: 'Users fetched successfully!',
             data: result,
         });
     }
     catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message || "Something wrong",
+            message: err.message || 'Something wrong',
         });
     }
 });
 //update user
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = Number(req.params.userId);
+        const { userId } = req.params;
         const UpData = req.body;
         const result = yield user_service_1.userServices.updateUser(userId, UpData);
         if ((result === null || result === void 0 ? void 0 : result.matchedCount) === 0) {
             res.status(404).json({
                 success: false,
-                message: "User not found",
+                message: 'User not found',
                 error: {
                     code: 404,
-                    description: "User not found!",
+                    description: 'User not found!',
                 },
             });
         }
@@ -105,14 +105,14 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         };
         res.status(200).json({
             success: true,
-            message: "User updated successfully!",
+            message: 'User updated successfully!',
             result: updateUserData,
         });
     }
     catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message || "Something wrong",
+            message: err.message || 'Something wrong',
         });
     }
 });
@@ -124,25 +124,25 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if ((result === null || result === void 0 ? void 0 : result.deletedCount) === 0) {
             res.status(404).json({
                 success: false,
-                message: "User not found",
+                message: 'User not found',
                 error: {
                     code: 404,
-                    description: "User not found!",
+                    description: 'User not found!',
                 },
             });
         }
         else {
             res.status(200).json({
                 success: true,
-                message: "user deleted successfully",
-                data: result,
+                message: 'user deleted successfully',
+                data: null,
             });
         }
     }
     catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message || "Something wrong",
+            message: err.message || 'Something wrong',
         });
     }
 });
@@ -150,85 +150,76 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const updateOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId } = req.params;
-        const ordrData = req.body;
-        const result = yield user_service_1.userServices.updateOrders(userId, ordrData);
+        const orderData = req.body;
+        const result = yield user_service_1.userServices.updateOrders(userId, orderData);
         if ((result === null || result === void 0 ? void 0 : result.matchedCount) === 0) {
             res.status(404).json({
                 success: false,
-                message: "User is not found",
+                message: 'User is not found',
                 error: {
                     code: 404,
-                    description: "User not found!",
+                    description: 'User not found!',
                 },
             });
         }
         res.status(200).json({
             success: true,
-            message: "Orders create Successfully",
+            message: 'Orders create Successfully',
             data: result,
         });
     }
     catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message || "Something wrong",
+            message: err.message || 'Something wrong',
         });
     }
 });
 // get user orders
 const getUserOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId } = req.params;
+        const userId = Number(req.params.userId);
         const result = yield user_service_1.userServices.getUserOrders(userId);
-        if (!result) {
-            res.status(404).json({
-                success: false,
-                message: "User not found",
-                error: {
-                    code: 404,
-                    description: "User not found!",
-                },
-            });
-            res.status(200).json({
-                success: true,
-                message: "Order fetched successfully",
-                data: result,
-            });
-        }
+        res.status(200).json({
+            success: true,
+            message: 'Order fetched successfully!',
+            data: result,
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }
-    catch (err) {
-        res.status(500).json({
+    catch (error) {
+        res.status(404).json({
             success: false,
-            message: err.message || "Something wrong",
+            message: (error === null || error === void 0 ? void 0 : error.message) || 'Something went wrong!',
+            error: {
+                code: 404,
+                description: error === null || error === void 0 ? void 0 : error.message,
+            },
         });
     }
 });
 // calculation
 const calculateOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId } = req.params;
-        const result = yield user_service_1.userServices.calculateOrders(userId);
-        if (!result) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found",
-                error: {
-                    code: 404,
-                    description: "User not found!",
-                },
-            });
-        }
+        const userId = Number(req.params.userId);
+        const totalPrice = yield user_service_1.userServices.calculateOrders(userId);
         res.status(200).json({
             success: true,
-            message: "Total price calculated successfully!",
-            totalPrice: result,
+            message: 'Total price calculated successfully!',
+            data: {
+                totalPrice,
+            },
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }
-    catch (err) {
-        res.status(500).json({
+    catch (error) {
+        res.status(404).json({
             success: false,
-            message: err.message || "Something went wrong",
-            error: err,
+            message: (error === null || error === void 0 ? void 0 : error.message) || 'Something went wrong!',
+            error: {
+                code: 404,
+                description: error === null || error === void 0 ? void 0 : error.message,
+            },
         });
     }
 });

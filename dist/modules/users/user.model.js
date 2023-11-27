@@ -19,8 +19,8 @@ const config_1 = __importDefault(require("../../app/config"));
 const userFullNameSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
-        required: [true, "firstName is require"],
-        maxlength: [20, "first name is more than 20 characters"],
+        required: [true, 'firstName is require'],
+        maxlength: [20, 'first name is more than 20 characters'],
         validate: function (value) {
             const nameCap = value.charAt(0).toUpperCase() + value.slice(1);
             return value === nameCap;
@@ -28,7 +28,7 @@ const userFullNameSchema = new mongoose_1.Schema({
     },
     lastName: {
         type: String,
-        required: [true, "lastName is require"],
+        required: [true, 'lastName is require'],
     },
 }, { _id: false });
 const userAddressSchema = new mongoose_1.Schema({
@@ -68,14 +68,14 @@ const userSchema = new mongoose_1.Schema({
     address: userAddressSchema,
     isActive: {
         type: Boolean,
-        required: [true, "isactive is require"],
+        required: [true, 'isactive is require'],
         default: true,
     },
     orders: { type: [userOrdersSchema] },
 });
 // // creating middleware
 // before sending data to db
-userSchema.pre("save", function (next) {
+userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         //Unexpected aliasing of 'this' to local variable.eslint@typescript-eslint/no-this-alias
         const users = this;
@@ -85,16 +85,16 @@ userSchema.pre("save", function (next) {
     });
 });
 // after saved data
-userSchema.post("save", function (document, next) {
-    document.password = "";
+userSchema.post('save', function (document, next) {
+    document.password = '';
     next();
 });
 // creating static method
-userSchema.statics.isUserExists = function (id) {
+userSchema.statics.isUserExists = function (userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const existingUser = yield exports.User.findOne({ id });
+        const existingUser = yield exports.User.findOne({ userId });
         return existingUser;
     });
 };
 // create model
-exports.User = (0, mongoose_1.model)("User-collection", userSchema);
+exports.User = (0, mongoose_1.model)('User-collection', userSchema);
