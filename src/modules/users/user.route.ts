@@ -3,10 +3,13 @@ import { userController } from "./user.controller";
 
 const router = express.Router();
 
-router.delete("/:userId", userController.deleteUser);
-router.put("/:userId", userController.updateUser);
-router.post("/", userController.createUser);
-router.get("/", userController.getAllusers);
-router.get("/:userId", userController.getSingUser);
+router.post("/", userController.createUser); // create user
+router.get("/", userController.getAllusers); // getalluser
+router.get("/:userId", userController.getSingUser); // getsingle user
+
+router.delete("/:userId", userController.deleteUser); // deleteuser
+router.put("/:userId", userController.updateUser); // update user
+
+router.put("/:userId/orders", userController.updateOrders); // update order
 
 export const userRoutes = router;

@@ -1,8 +1,11 @@
-import { TUpdateUser, TUser } from "./user.interface";
+import { TOrder, TUpdateUser, TUser } from "./user.interface";
 import { User } from "./user.model";
 
 // create user
 const createUserIntoDB = async (user: TUser) => {
+  if (await User.isUserExists(user.userId)) {
+    throw new Error("User already exists");
+  }
   const result = await User.create(user);
   return result;
 };
@@ -56,10 +59,20 @@ const deleteUser = async (id: string) => {
   return result;
 };
 
+//update orders
+const updateOrders = async (id: string, orderData: TOrder) => {
+  const result = await User.updateOne(
+    { userId: id },
+    { $addToSet: { orders: orderData } }
+  );
+  return result;
+};
+
 export const userServices = {
   createUserIntoDB,
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  updateOrders,
 };
