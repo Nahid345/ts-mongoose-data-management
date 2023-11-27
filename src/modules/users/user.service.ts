@@ -68,6 +68,24 @@ const updateOrders = async (id: string, orderData: TOrder) => {
   return result;
 };
 
+// get order
+
+const getUserOrders = async (id: string) => {
+  const result = await User.findOne({ userId: id });
+  return result?.orders;
+};
+
+// calcualtor
+const calculateOrders = async (id: string) => {
+  const user = await User.findOne({ userId: id });
+
+  const totalOrderPrice =
+    user?.orders?.reduce(
+      (total, orders) => total + orders.price * orders.quantity,
+      0
+    ) || 0;
+  return totalOrderPrice;
+};
 export const userServices = {
   createUserIntoDB,
   getAllUsers,
@@ -75,4 +93,6 @@ export const userServices = {
   updateUser,
   deleteUser,
   updateOrders,
+  getUserOrders,
+  calculateOrders,
 };

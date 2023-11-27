@@ -175,6 +175,64 @@ const updateOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
     }
 });
+// get user orders
+const getUserOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const result = yield user_service_1.userServices.getUserOrders(userId);
+        if (!result) {
+            res.status(404).json({
+                success: false,
+                message: "User not found",
+                error: {
+                    code: 404,
+                    description: "User not found!",
+                },
+            });
+            res.status(200).json({
+                success: true,
+                message: "Order fetched successfully",
+                data: result,
+            });
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message || "Something wrong",
+        });
+    }
+});
+// calculation
+const calculateOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const result = yield user_service_1.userServices.calculateOrders(userId);
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+                error: {
+                    code: 404,
+                    description: "User not found!",
+                },
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: "Total price calculated successfully!",
+            totalPrice: result,
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message || "Something went wrong",
+            error: err,
+        });
+    }
+});
 exports.userController = {
     createUser,
     getAllusers,
@@ -182,4 +240,6 @@ exports.userController = {
     updateUser,
     deleteUser,
     updateOrders,
+    getUserOrders,
+    calculateOrders,
 };

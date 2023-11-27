@@ -176,6 +176,68 @@ const updateOrders = async (req: Request, res: Response) => {
   }
 };
 
+// get user orders
+
+const getUserOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.getUserOrders(userId);
+    if (!result) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Order fetched successfully",
+        data: result,
+      });
+    }
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something wrong",
+    });
+  }
+};
+
+// calculation
+
+const calculateOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const result = await userServices.calculateOrders(userId);
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Total price calculated successfully!",
+      totalPrice: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong",
+      error: err,
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getAllusers,
@@ -183,4 +245,6 @@ export const userController = {
   updateUser,
   deleteUser,
   updateOrders,
+  getUserOrders,
+  calculateOrders,
 };

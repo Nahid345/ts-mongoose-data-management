@@ -62,6 +62,18 @@ const updateOrders = (id, orderData) => __awaiter(void 0, void 0, void 0, functi
     const result = yield user_model_1.User.updateOne({ userId: id }, { $addToSet: { orders: orderData } });
     return result;
 });
+// get order
+const getUserOrders = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.User.findOne({ userId: id });
+    return result === null || result === void 0 ? void 0 : result.orders;
+});
+// calcualtor
+const calculateOrders = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const user = yield user_model_1.User.findOne({ userId: id });
+    const totalOrderPrice = ((_a = user === null || user === void 0 ? void 0 : user.orders) === null || _a === void 0 ? void 0 : _a.reduce((total, orders) => total + orders.price * orders.quantity, 0)) || 0;
+    return totalOrderPrice;
+});
 exports.userServices = {
     createUserIntoDB,
     getAllUsers,
@@ -69,4 +81,6 @@ exports.userServices = {
     updateUser,
     deleteUser,
     updateOrders,
+    getUserOrders,
+    calculateOrders,
 };
