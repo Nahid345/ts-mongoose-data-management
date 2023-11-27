@@ -1,12 +1,6 @@
-import { Schema, model, connect } from "mongoose";
+import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
-import {
-  TAddress,
-  TFullName,
-  TOrder,
-  TUser,
-  UserModel,
-} from "./user.interface";
+import { TFullName, TUser, UserModel } from "./user.interface";
 import config from "../../app/config";
 
 const userFullNameSchema = new Schema<TFullName>(
@@ -83,6 +77,7 @@ const userSchema = new Schema<TUser, UserModel>({
 
 // before sending data to db
 userSchema.pre("save", async function (next) {
+  //Unexpected aliasing of 'this' to local variable.eslint@typescript-eslint/no-this-alias
   const users = this;
 
   // Store hashing  password into DB.

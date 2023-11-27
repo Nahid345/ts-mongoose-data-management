@@ -228,7 +228,6 @@ const calculateOrders = async (req: Request, res: Response) => {
       message: "Total price calculated successfully!",
       totalPrice: result,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,

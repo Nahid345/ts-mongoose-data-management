@@ -77,6 +77,7 @@ const userSchema = new mongoose_1.Schema({
 // before sending data to db
 userSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
+        //Unexpected aliasing of 'this' to local variable.eslint@typescript-eslint/no-this-alias
         const users = this;
         // Store hashing  password into DB.
         users.password = yield bcrypt_1.default.hash(users.password, Number(config_1.default.bcrypt_salt_round));
